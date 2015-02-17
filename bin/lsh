@@ -1,0 +1,28 @@
+#!/bin/sh -e
+_EXECUTEORCAT="cat"
+_MYTTY=`tty`
+while getopts "ix" _o; do
+   case "${_o}" in
+      i)
+          _TMPFILE=`mktemp`
+      ;;
+      x)
+         _EXECUTEORCAT="sh -eu"
+      ;;
+      *)
+         exit 1
+      ;;
+   esac
+done
+shift $((OPTIND-1))
+_FILE="$1"
+if [ ! -z "$_TMPFILE" ]; then
+         grep -E '^    ' <${_FILE} | grep -Eo '#\$.*|\$[A-Z][A-Za-z0-9_]*' | sed -e 's/^\$//' -e '/^#/!s;$;=;' >"${_TMPFILE}"
+	 $EDITOR "${_TMPFILE}"
+fi
+{ echo "#!/bin/sh -eu" ;
+if [ ! -z "$_TMPFILE" ]; then 
+    cat $_TMPFILE;
+    rm $_TMPFILE;
+fi
+sed -e '/^    /!d' -e 's;^    ;;' <${_FILE} ; } | eval "${_EXECUTEORCAT}"
