@@ -1,6 +1,6 @@
 #lsh
 
-Literal shellscript like literal haskel.
+Literal shellscript: document and execute shellcode in your markdown.
 
 ##Purpose
 
@@ -25,7 +25,7 @@ Just mix your shellscript with mardown like this:
         sudo pkg install -y cowsay
       fi
     fi
-    #$WHAT: something to about this
+    #$WHAT: something say to about this
     : ${WHAT:=awesome}
     cowsay "This is $WHAT!"
     exit
