@@ -1,10 +1,11 @@
-#!/bin/sh -e
+#!/bin/bash -eu
 _EXECUTEORCAT="cat"
-_MYTTY=`tty`
-while getopts "ix" _o; do
+_TMPFILE=`mktemp`
+_EDIT="NO"
+while getopts "ex" _o; do
    case "${_o}" in
-      i)
-          _TMPFILE=`mktemp`
+      e)
+          _EDIT="YES"
       ;;
       x)
          _EXECUTEORCAT="sh -eu"
@@ -14,15 +15,23 @@ while getopts "ix" _o; do
       ;;
    esac
 done
+
+editor () {
+    if [ ! -z "${VISUAL+x}" ]; then
+        "${VISUAL}" "$1"
+        return
+    fi
+    if [ ! -z "${EDITOR+x}" ]; then
+        "${EDITOR}" "$1"
+        return
+    fi
+    command editor "$1"
+}
+
 shift $((OPTIND-1))
 _FILE="$1"
-if [ ! -z "$_TMPFILE" ]; then
-         grep -E '^    ' <${_FILE} | grep -Eo '#\$.*|\$[A-Z][A-Za-z0-9_]*' | sed -e 's/^\$//' -e '/^#/!s;$;=;' >"${_TMPFILE}"
-	 $EDITOR "${_TMPFILE}"
+sed -e '/^    /!d' -e 's;^    ;;' <${_FILE}  >${_TMPFILE}
+if [ "$_EDIT" = "YES" ]; then
+	editor "${_TMPFILE}"
 fi
-{ echo "#!/bin/sh -eu" ;
-if [ ! -z "$_TMPFILE" ]; then 
-    cat $_TMPFILE;
-    rm $_TMPFILE;
-fi
-sed -e '/^    /!d' -e 's;^    ;;' <${_FILE} ; } | eval "${_EXECUTEORCAT}"
+{ echo "#!/bin/sh -eu" ; cat <${_TMPFILE};  } | eval "${_EXECUTEORCAT}"

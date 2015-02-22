@@ -18,7 +18,7 @@ Just mix your shellscript with mardown like this:
         sudo yum -y install cowsay
       fi
       if which apt-get >/dev/null; then
-        sudo apt-get update 
+        sudo apt-get update
         sudo apt-get -y install cowsay
       fi
       if which pkg >/dev/null; then
@@ -36,14 +36,14 @@ Run this markdown like this:
 
 ##Default action
 
+Dump script:
+
     bin/lsh README.md
 
-Dumps script.
+##Edit
 
-##Edit (undefined) vars 
-
-    bin/lsh -i README.md
+    bin/lsh -e README.md
 
 ##Edit and execute
 
-    bin/lsh -ix README.md
+    bin/lsh -ex README.md
