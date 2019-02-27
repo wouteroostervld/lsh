@@ -1,15 +1,15 @@
-#lsh
+# lsh
 
 Literal shellscript: document and execute shellcode in your markdown.
 
-##Purpose
+## Purpose
 
 Wouldn't it be nice to have your examples in markdown to be directly
 executable? Now you can.
 
 Inspired by literal haskell.
 
-##Example
+## Example
 
 Just mix your shellscript with mardown like this:
 
@@ -34,16 +34,16 @@ Run this markdown like this:
 
     bin/lsh -x README.md
 
-##Default action
+## Default action
 
 Dump script:
 
     bin/lsh README.md
 
-##Edit
+## Edit
 
     bin/lsh -e README.md
 
-##Edit and execute
+## Edit and execute
 
     bin/lsh -ex README.md
